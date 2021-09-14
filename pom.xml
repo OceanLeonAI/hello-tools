@@ -27,6 +27,8 @@
     </properties>
 
     <dependencies>
+
+        <!-- springboot 相关依赖 -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
@@ -36,13 +38,6 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
-        </dependency>
-
-        <!-- word 模板渲染相关 -->
-        <dependency>
-            <groupId>com.deepoove</groupId>
-            <artifactId>poi-tl</artifactId>
-            <version>1.7.3</version>
         </dependency>
 
         <!-- lombok -->
