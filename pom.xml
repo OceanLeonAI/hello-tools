@@ -19,6 +19,7 @@
     <!-- 聚合 -->
     <modules>
         <module>hello-word</module>
+        <module>hello-encrypt-decrypt</module>
     </modules>
 
     <properties>
