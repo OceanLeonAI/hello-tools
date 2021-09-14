@@ -4,6 +4,7 @@ import org.junit.Assert;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.Arrays;
 
 /**
  * @PROJECT_NAME: hello-tools
@@ -63,10 +64,10 @@ public class SunTest {
         byte[] data2 = encodeMD2(str.getBytes());
 
         // 校验
-        System.out.println(data1 == data2);
+        System.out.println(Arrays.equals(data1, data2));
 
         // 校验
-        Assert.assertArrayEquals(data1, data2);
+        Assert.assertArrayEquals("不相同", data1, data2);
     }
 
     public static void testEncodeMD5() throws NoSuchAlgorithmException {
@@ -78,10 +79,11 @@ public class SunTest {
         byte[] data2 = encodeMD5(str.getBytes());
 
         // 校验
-        System.out.println(data1 == data2);
+        System.out.println(Arrays.equals(data1, data2));
+
 
         // 校验
-        Assert.assertArrayEquals(data1, data2);
+        Assert.assertArrayEquals("不相同", data1, data2);
     }
 
     public static void main(String[] args) throws NoSuchAlgorithmException {
