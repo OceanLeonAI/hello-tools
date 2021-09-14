@@ -116,9 +116,9 @@ public class StudentScore implements Serializable {
             private static final long serialVersionUID = 7976556000187989819L;
 
             {
-                add(Score.builder().subjectName("语文").score(90d).build());
-                add(Score.builder().subjectName("数学").score(99.99d).build());
-                add(Score.builder().subjectName("英语").score(100d).build());
+                add(Score.builder().index(1).subjectName("语文").score(90d).build());
+                add(Score.builder().index(2).subjectName("数学").score(99.99d).build());
+                add(Score.builder().index(3).subjectName("英语").score(100d).build());
             }
 
         };
@@ -126,7 +126,7 @@ public class StudentScore implements Serializable {
         StudentScore studentScore = StudentScore.builder()
                 .student(student)
                 .scoreList(scoreList)
-                .remark("这是一段学生成绩的备注信息")
+                .remark("这是一段学生成绩的备注信息，该生表现优异，学习努力，待人接物有礼貌，是个好孩纸。")
                 .createTime(new SimpleDateFormat("yyyy年MM月dd日HH:mm:ss").format(new Date()))
                 .build();
 

@@ -24,6 +24,11 @@ public class Score implements Serializable {
     private static final long serialVersionUID = 9218498835773355325L;
 
     /**
+     * 序号
+     */
+    private int index;
+
+    /**
      * 科目名称
      */
     private String subjectName;

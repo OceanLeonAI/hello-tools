@@ -2,6 +2,7 @@ package com.leon.util;
 
 import com.deepoove.poi.XWPFTemplate;
 import com.deepoove.poi.config.Configure;
+import com.deepoove.poi.data.PictureRenderData;
 import com.deepoove.poi.policy.HackLoopTableRenderPolicy;
 import com.leon.entity.StudentScore;
 import lombok.extern.slf4j.Slf4j;
@@ -33,10 +34,23 @@ public class WordExportUtils {
         exportStudentScoreReportTest();
     }
 
-    public static void exportStudentScoreReport(Map<String, Object> data, HttpServletRequest request, HttpServletResponse response) throws IOException {
+    /**
+     * 下载 word 文档
+     *
+     * @param renderData
+     * @param request
+     * @param response
+     * @throws IOException
+     */
+    public static void exportStudentScoreReport(Map<String, Object> renderData, HttpServletRequest request, HttpServletResponse response) throws IOException {
 
+        // 插入图片
+        renderData.put("ai", new PictureRenderData(
+                250, 260,
+                WordExportUtils.class.getClassLoader().getResource("").getPath() + "picture/ai.jpg")
+        );
 
-        log.info("待渲染数据 ---> {}", data);
+        log.info("待渲染数据 ---> {}", renderData);
 
         //模版路径
         String templatePath = "/word/" + "word_template_student_score" + ".docx";
@@ -51,7 +65,7 @@ public class WordExportUtils {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
         String formatDateString = sdf.format(new Date());
 
-        String studentName = (String) ((Map<String, Object>) data.get("student")).get("name");
+        String studentName = (String) ((Map<String, Object>) renderData.get("student")).get("name");
         String fileName = "学生成绩报告_" + studentName + "_" + formatDateString;
 
         String fileNameNew = new String(fileName.getBytes(StandardCharsets.UTF_8), StandardCharsets.ISO_8859_1);
@@ -67,7 +81,7 @@ public class WordExportUtils {
                     .build();
             // 输出 word 内容文件流，提供下载
             // template = XWPFTemplate.compile(resource.getInputStream()).render(map);
-            template = XWPFTemplate.compile(resourceAsStream).render(data); // 渲染数据
+            template = XWPFTemplate.compile(resourceAsStream).render(renderData); // 渲染数据
 
             response.reset();
             response.setContentType("application/x-msdownload");
@@ -84,10 +98,21 @@ public class WordExportUtils {
     }
 
 
+    /**
+     * 本地导出 word 文档
+     *
+     * @throws Exception
+     */
     private static void exportStudentScoreReportTest() throws Exception {
 
         // 获取模拟数据
         Map<String, Object> studentScoreMockDataMap = StudentScore.getStudentScoreMockDataMap();
+
+        // 插入图片
+        studentScoreMockDataMap.put("ai", new PictureRenderData(
+                250, 260,
+                WordExportUtils.class.getClassLoader().getResource("").getPath() + "picture/ai.jpg")
+        );
 
         // 获取模板路径
         String templatePath = WordExportUtils.class.getClassLoader().getResource("").getPath() + "/word/word_template_student_score.docx";
@@ -113,6 +138,7 @@ public class WordExportUtils {
         //导出到指定路径
         XWPFTemplate template = null;
         FileOutputStream out = null;
+
         try {
             //渲染表格
             HackLoopTableRenderPolicy policy = new HackLoopTableRenderPolicy();
