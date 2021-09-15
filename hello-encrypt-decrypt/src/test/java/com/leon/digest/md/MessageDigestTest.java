@@ -19,7 +19,7 @@ public class MessageDigestTest {
     @Test
     public void testEncodeMD2() throws NoSuchAlgorithmException {
 
-        String str = "MD2信息摘要";
+        String str = "MD2消息摘要";
 
         MessageDigest md2 = MessageDigest.getInstance("MD2");
         byte[] digest1 = md2.digest(str.getBytes());

@@ -8,13 +8,13 @@ import java.util.Arrays;
 
 /**
  * @PROJECT_NAME: hello-tools
- * @CLASS_NAME: SunTest
+ * @CLASS_NAME: MD2AndMD5SunTest
  * @AUTHOR: OceanLeonAI
  * @CREATED_DATE: 2021/9/14 17:30
  * @Version 1.0
- * @DESCRIPTION: 无论 MD2、MD3、MD5算法，最终产生一个 128 位的信息摘要
+ * @DESCRIPTION: 无论 MD2、MD3、MD5算法，最终产生一个 128 位的消息摘要
  **/
-public class SunTest {
+public class MD2AndMD5SunTest {
 
     private static final String DATA = "这是测试代码";
 
@@ -32,6 +32,8 @@ public class SunTest {
 
         // 执行消息摘要
         byte[] digest = md2.digest(data);
+
+        // System.out.println("--- " + new String(Hex.encode(digest)));
 
         return digest;
 
@@ -58,7 +60,7 @@ public class SunTest {
 
     public static void testEncodeMD2() throws NoSuchAlgorithmException {
 
-        String str = "MD2信息摘要";
+        String str = "MD2消息摘要";
         // 获取摘要
         byte[] data1 = encodeMD2(str.getBytes());
         byte[] data2 = encodeMD2(str.getBytes());
@@ -72,7 +74,7 @@ public class SunTest {
 
     public static void testEncodeMD5() throws NoSuchAlgorithmException {
 
-        String str = "MD5信息摘要";
+        String str = "MD5消息摘要";
 
         // 获取摘要
         byte[] data1 = encodeMD5(str.getBytes());
