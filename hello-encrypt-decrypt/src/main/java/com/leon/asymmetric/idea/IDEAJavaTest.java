@@ -1,36 +1,38 @@
-package com.leon.asymmetric.des;
+package com.leon.asymmetric.idea;
 
 import org.apache.commons.codec.binary.Base64;
+import org.bouncycastle.jce.provider.BouncyCastleProvider;
 
 import javax.crypto.*;
-import javax.crypto.spec.DESKeySpec;
+import javax.crypto.spec.SecretKeySpec;
 import java.security.InvalidKeyException;
 import java.security.Key;
 import java.security.NoSuchAlgorithmException;
+import java.security.Security;
 import java.security.spec.InvalidKeySpecException;
 
 /**
  * @PROJECT_NAME: hello-tools
- * @CLASS_NAME: DESJavaTest
+ * @CLASS_NAME: IDEAJavaTest
  * @AUTHOR: OceanLeonAI
- * @CREATED_DATE: 2021/9/15 17:27
+ * @CREATED_DATE: 2021/9/16 11:25
  * @Version 1.0
- * @DESCRIPTION: Java7 仅支持56位秘钥长度
- * Data Encryption Standard 数据加密标准
+ * @DESCRIPTION: International Data Encryption Algorithm
  **/
-public class DESJavaTest {
-
+public class IDEAJavaTest {
     /**
-     * Java7 只支持56位秘钥
-     * <p>
-     * Bouncy Castle 支持64位秘钥
+     * 秘钥算法
      */
-    public static final String KEY_ALGORITHM = "DES";
+    public static final String KEY_ALGORITHM = "IDEA";
 
     /**
      * 加密/解密算法/工作模式/填充方式
+     * <p>
+     * Java7 支持 PKCS5Padding 填充方式
+     * <p>
+     * Bouncy Castle 支持 PKCS7Padding 填充方式
      */
-    public static final String CIPHER_ALGORITHM = "DES/ECB/PKCS5padding";
+    public static final String CIPHER_ALGORITHM = "IDEA/ECB/ISO10126Padding";
 
     /**
      * 生成秘钥
@@ -40,24 +42,12 @@ public class DESJavaTest {
      */
     public static byte[] initKey() throws NoSuchAlgorithmException {
 
-        /**
-         *实例化秘钥生成器
-         * 若需要使用64位秘钥
-         * KeyGenerator.getInstance(CIPHER_ALGORITHM,"BC") // BC Bouncy Castle 缩写
-         * 这段代码等同于
-         * Security.addProvider(new BouncyCastleProvider());
-         * KeyGenerator kg = KeyGenerator.getInstance(CIPHER_ALGORITHM);
-         */
+        // 加入 Bouncy Castle 支持
+        Security.addProvider(new BouncyCastleProvider());
 
         KeyGenerator keyGenerator = KeyGenerator.getInstance(KEY_ALGORITHM);
 
-        /**
-         * 如果是64位秘钥
-         * keyGenerator.init(64);
-         *
-         * keyGenerator.init(new SecureRandom()); // 默认长度
-         */
-        keyGenerator.init(56);
+        keyGenerator.init(128);
 
         // 生成秘钥
         SecretKey secretKey = keyGenerator.generateKey();
@@ -66,17 +56,15 @@ public class DESJavaTest {
         return secretKey.getEncoded();
     }
 
-    private static Key toKey(byte[] key) throws InvalidKeyException, NoSuchAlgorithmException, InvalidKeySpecException {
-
-        // 实例化 DES 秘钥材料
-        DESKeySpec desKeySpec = new DESKeySpec(key);
-
-        // 实例化秘钥工厂
-        SecretKeyFactory keyFactory = SecretKeyFactory.getInstance(KEY_ALGORITHM);
-
-        // 生成秘钥
-        SecretKey secretKey = keyFactory.generateSecret(desKeySpec);
-
+    /**
+     * 转换秘钥
+     *
+     * @param key
+     * @return
+     */
+    private static Key toKey(byte[] key) {
+        // 实例化 IDEA 秘钥材料
+        SecretKey secretKey = new SecretKeySpec(key, KEY_ALGORITHM);
         return secretKey;
     }
 
@@ -93,12 +81,14 @@ public class DESJavaTest {
      * @throws IllegalBlockSizeException
      * @throws BadPaddingException
      */
-    public static byte[] encrypt(byte[] data, byte[] key) throws NoSuchAlgorithmException, InvalidKeySpecException, InvalidKeyException, NoSuchPaddingException, IllegalBlockSizeException, BadPaddingException {
+    public static byte[] encrypt(byte[] data, byte[] key) throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidKeyException, IllegalBlockSizeException, BadPaddingException {
+
+        // 加入 Bouncy Castle 支持
+        Security.addProvider(new BouncyCastleProvider());
 
         // 还原秘钥
         Key k = toKey(key);
 
-        // 实例化
         Cipher cipher = Cipher.getInstance(CIPHER_ALGORITHM);
 
         // 初始化，设置为加密模式
@@ -109,12 +99,14 @@ public class DESJavaTest {
 
     }
 
-    public static byte[] decrypt(byte[] data, byte[] key) throws NoSuchAlgorithmException, InvalidKeySpecException, InvalidKeyException, NoSuchPaddingException, IllegalBlockSizeException, BadPaddingException {
+    public static byte[] decrypt(byte[] data, byte[] key) throws NoSuchAlgorithmException, InvalidKeyException, NoSuchPaddingException, IllegalBlockSizeException, BadPaddingException {
+
+        // 加入 Bouncy Castle 支持
+        Security.addProvider(new BouncyCastleProvider());
 
         // 还原秘钥
         Key k = toKey(key);
 
-        // 实例化
         Cipher cipher = Cipher.getInstance(CIPHER_ALGORITHM);
 
         // 初始化，设置为加密模式
@@ -125,10 +117,10 @@ public class DESJavaTest {
 
     }
 
+
     public static void main(String[] args) throws NoSuchAlgorithmException, NoSuchPaddingException, IllegalBlockSizeException, InvalidKeySpecException, BadPaddingException, InvalidKeyException {
 
-        String data = "DESJavaTest对称加密测试";
-//        String data = "DES";
+        String data = "IDEAJavaTest对称加密测试";
         byte[] dataBytes = data.getBytes();
 
         System.out.println("加密前 data ---> " + data);

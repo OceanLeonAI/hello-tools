@@ -13,6 +13,7 @@ import java.util.Arrays;
  * @CREATED_DATE: 2021/9/14 17:30
  * @Version 1.0
  * @DESCRIPTION: 无论 MD2、MD3、MD5算法，最终产生一个 128 位的消息摘要
+ * Message Digest 信息摘要算法
  **/
 public class MD2AndMD5SunTest {
 

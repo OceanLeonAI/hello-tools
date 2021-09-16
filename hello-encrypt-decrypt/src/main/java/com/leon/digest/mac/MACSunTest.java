@@ -15,6 +15,7 @@ import java.util.Arrays;
  * @CREATED_DATE: 2021/9/15 16:29
  * @Version 1.0
  * @DESCRIPTION: HmacMD5、HmacSHA1、HmacSHA384、HmacSHA512
+ * Message Authentication Code 消息认证码算法
  **/
 public class MACSunTest {
 
