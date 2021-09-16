@@ -257,7 +257,9 @@ public class DHJavaTest {
      * @throws InvalidKeySpecException
      * @throws InvalidKeyException
      */
-    public static void main(String[] args) throws NoSuchAlgorithmException, InvalidAlgorithmParameterException, InvalidKeySpecException, InvalidKeyException {
+    public static void main(String[] args) throws NoSuchAlgorithmException, InvalidAlgorithmParameterException, InvalidKeySpecException, InvalidKeyException, NoSuchPaddingException, IllegalBlockSizeException, BadPaddingException {
+
+        System.getProperties().setProperty("jdk.crypto.KeyAgreement.legacyKDF", "true");
 
         // 甲方公钥
         byte[] publicKey1;
@@ -304,7 +306,45 @@ public class DHJavaTest {
 
         // --------------------------------- 初始化秘钥   end ---------------------------------
 
+        System.out.println("=========================== 分割线 ===================================");
+
+        // --------------------------------- 甲方发送，乙方接收   begin ---------------------------------
+        System.out.println("========================== 甲方发送，乙方接收   begin ==========================");
+
+        String input1 = "甲方发送，乙方接收";
+        System.out.println("甲方发送前 ---> " + input1);
+        byte[] encrypt1 = encrypt(input1.getBytes(), key1);
+        System.out.println("甲方加密后 ---> " + Base64.encodeBase64String(encrypt1));
+
+        System.out.println("========================== 甲方发送，乙方接收     end ==========================");
+        // --------------------------------- 甲方发送，乙方接收     end ---------------------------------
+
+        System.out.println("=========================== 分割线 ===================================");
+
+        // --------------------------------- 乙方发送，甲方接收   begin ---------------------------------
+        System.out.println("========================== 乙方发送，甲方接收   begin ==========================");
+
+        System.out.println("========================== 乙方发送，甲方接收     end ==========================");
+        // --------------------------------- 乙方发送，甲方接收     end ---------------------------------
+
+
     }
 
+    /**
+     * Exception in thread "main" java.security.NoSuchAlgorithmException: Unsupported secret key algorithm: DES
+     * 	at com.sun.crypto.provider.DHKeyAgreement.engineGenerateSecret(DHKeyAgreement.java:387)
+     * 	at javax.crypto.KeyAgreement.generateSecret(KeyAgreement.java:648)
+     * 	at com.leon.symmetric.dhecdh.DHJavaTest.getSecretKey(DHJavaTest.java:221)
+     * 	at com.leon.symmetric.dhecdh.DHJavaTest.main(DHJavaTest.java:298)
+     *
+     * 	https://blog.csdn.net/fengzun_yi/article/details/104497160
+     *
+     * 	密钥所用的算法不被支持，这个是由于JDK8 update 161之后，DH的密钥长度至少为512位，但AES算法密钥不能达到这样的长度，长度不一致所以导致报错。
+     * 解决的方法：
+     * 将 -Djdk.crypto.KeyAgreement.legacyKDF=true 写入JVM系统变量中，可以在eclipse的run configurations里配置系统变量
+     *
+     * 或者,代码中设置环境变量
+     * System.getProperties().setProperty("jdk.crypto.KeyAgreement.legacyKDF", "true");
+     */
 
 }
