@@ -49,7 +49,7 @@ public class MD5CommonsCodecTest {
         System.out.println("====================================");
 
         String md5Hex1 = encodeMD5Hex(str);
-        System.out.println("md5Hex1 --->" + md5Hex1);
+        System.out.println("md5Hex1 --->" + md5Hex1 + "bit length ---> " + md5Hex1.length() * 4); // 32 为十六进制字符串
 
         String md5Hex2 = encodeMD5Hex(str);
         System.out.println("md5Hex2 --->" + md5Hex2);
