@@ -1,11 +1,11 @@
-package com.leon.sign.dsa;
+package com.leon.sign.ecdsa;
 
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.codec.binary.Hex;
 
 import java.security.*;
-import java.security.interfaces.DSAPrivateKey;
-import java.security.interfaces.DSAPublicKey;
+import java.security.interfaces.ECPrivateKey;
+import java.security.interfaces.ECPublicKey;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.PKCS8EncodedKeySpec;
 import java.security.spec.X509EncodedKeySpec;
@@ -14,35 +14,38 @@ import java.util.Map;
 
 /**
  * @PROJECT_NAME: hello-tools
- * @CLASS_NAME: SignDSAJavaTest
+ * @CLASS_NAME: SignECECDSAJavaTest
  * @AUTHOR: OceanLeonAI
- * @CREATED_DATE: 2021/9/29 15:53
+ * @CREATED_DATE: 2021/9/29 15:59
  * @Version 1.0
- * @DESCRIPTION: Digital Signature Algorithm 数字签名算法
+ * @DESCRIPTION: Elliptic Curve Digital Signature Algorithm 椭圆曲线数字签名算法那
+ * <p>
+ * FIXME: Exception in thread "main" java.security.NoSuchAlgorithmException: ECDSA KeyPairGenerator not available
  **/
-public class SignDSAJavaTest {
+public class SignECDSAJavaTest {
+
 
     /**
      * 数字签名
      * 秘钥算法
      */
-    public static final String KEY_ALGORITHM = "DSA";
+    public static final String KEY_ALGORITHM = "ECDSA";
 
     /**
      * 数字签名
      * 签名、验签算法那
      */
-    public static final String SIGNATURE_ALGORITHM = "SHA1WithDSA";
+    public static final String SIGNATURE_ALGORITHM = "SHA512withECDSA";
 
     /**
      * 公钥
      */
-    public static final String PUBLIC_KEY = "DSAPublicKey";
+    public static final String PUBLIC_KEY = "ECDSAPublicKey";
 
     /**
      * 私钥
      */
-    public static final String PRIVATE_KEY = "DSAPrivateKey";
+    public static final String PRIVATE_KEY = "ECDSAPrivateKey";
 
     /**
      * 秘钥长度
@@ -64,16 +67,16 @@ public class SignDSAJavaTest {
         KeyPairGenerator keyPairGenerator = KeyPairGenerator.getInstance(KEY_ALGORITHM);
 
         // 初始化秘钥对生成器
-        keyPairGenerator.initialize(KEY_SIZE, new SecureRandom());
+        keyPairGenerator.initialize(KEY_SIZE);
 
         // 生成秘钥对
         KeyPair keyPair = keyPairGenerator.generateKeyPair();
 
         // 公钥
-        DSAPublicKey publicKey = (DSAPublicKey) keyPair.getPublic();
+        ECPublicKey publicKey = (ECPublicKey) keyPair.getPublic();
 
         // 私钥
-        DSAPrivateKey privateKey = (DSAPrivateKey) keyPair.getPrivate();
+        ECPrivateKey privateKey = (ECPrivateKey) keyPair.getPrivate();
 
         // 存储
         Map<String, Object> keyMap = new HashMap<>(2);
@@ -113,6 +116,10 @@ public class SignDSAJavaTest {
      * @return
      */
     public static byte[] sign(byte[] data, byte[] privateKey) throws NoSuchAlgorithmException, InvalidKeySpecException, InvalidKeyException, SignatureException {
+
+        // 若需要实现 RIPEMD160withECDSA
+        // 添加 Bouncy Castle
+        // Security.addProvider(new BouncyCastleProvider());
 
         // 转换私钥材料
         PKCS8EncodedKeySpec pkcs8EncodedKeySpec = new PKCS8EncodedKeySpec(privateKey);
@@ -177,7 +184,7 @@ public class SignDSAJavaTest {
         System.out.println("publicKey ---> " + Base64.encodeBase64String(publicKey));
         System.out.println("privateKey ---> " + Base64.encodeBase64String(privateKey));
 
-        String inputStr = "DSA数字签名";
+        String inputStr = "ECDSA数字签名";
         byte[] data = inputStr.getBytes();
 
         // 产生签名
@@ -190,4 +197,5 @@ public class SignDSAJavaTest {
         System.out.println("验签通过？ ---> " + verify);
 
     }
+
 }
